@@ -1,16 +1,16 @@
-FarCopyData::
+FarCopyBytes::
 ; Copy bc bytes from a:hl to de.
-	ld [wFarCopyDataSavedROMBank], a
+	ld [wFarCopyBytesSavedROMBank], a
 	ldh a, [hLoadedROMBank]
 	push af
-	ld a, [wFarCopyDataSavedROMBank]
+	ld a, [wFarCopyBytesSavedROMBank]
 	call BankswitchCommon
-	call CopyData
+	call CopyBytes
 	pop af
 	call BankswitchCommon
 	ret
 
-CopyData::
+CopyBytes::
 ; Copy bc bytes from hl to de.
 	ld a, b
 	and a
@@ -51,7 +51,7 @@ CopyVideoDataAlternate::
 	and c
 	ld c, a
 	pop af
-	jp FarCopyData
+	jp FarCopyBytes
 
 CopyVideoDataDoubleAlternate::
 	ldh a, [rLCDC]
@@ -71,4 +71,4 @@ CopyVideoDataDoubleAlternate::
 	ld c, l
 	pop af
 	pop hl
-	jp FarCopyDataDouble
+	jp FarCopyBytesDouble

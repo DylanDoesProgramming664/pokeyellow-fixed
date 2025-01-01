@@ -587,7 +587,7 @@ WriteMonMoves:
 	call AddNTimes
 	ld de, wBuffer
 	ld a, BANK(Moves)
-	call FarCopyData
+	call FarCopyBytes
 	ld a, [wBuffer + 5]
 	pop hl
 	ld [hl], a

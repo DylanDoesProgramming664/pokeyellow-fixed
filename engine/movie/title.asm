@@ -40,17 +40,17 @@ DisplayTitleScreen:
 	ld de, vTitleLogo tile $60
 	ld bc, 5 tiles
 	ld a, BANK(NintendoCopyrightLogoGraphics)
-	call FarCopyData
+	call FarCopyBytes
 	ld hl, NineTile
 	ld de, vTitleLogo tile $6e
 	ld bc, 1 tiles
 	ld a, BANK(NineTile)
-	call FarCopyData
+	call FarCopyBytes
 	ld hl, GameFreakLogoGraphics
 	ld de, vTitleLogo tile $65
 	ld bc, 9 tiles
 	ld a, BANK(GameFreakLogoGraphics)
-	call FarCopyData
+	call FarCopyBytes
 	callfar LoadYellowTitleScreenGFX
 	ld hl, vBGMap0
 	ld bc, (vBGMap1 tile $40) - vBGMap0

@@ -302,12 +302,12 @@ LoadTownMap:
 	ld de, vChars2 tile $60
 	ld bc, WorldMapTileGraphicsEnd - WorldMapTileGraphics
 	ld a, BANK(WorldMapTileGraphics)
-	call FarCopyData
+	call FarCopyBytes
 	ld hl, MonNestIcon
 	ld de, vSprites tile $04
 	ld bc, MonNestIconEnd - MonNestIcon
 	ld a, BANK(MonNestIcon)
-	call FarCopyDataDouble
+	call FarCopyBytesDouble
 	hlcoord 0, 0
 	ld de, CompressedMap
 .nextTile

@@ -467,14 +467,14 @@ Printer_CopyTileMapToPrinterTileBuffer:
 	hlcoord 0, 0
 	decoord 0, 0, wPrinterTileBuffer
 	ld bc, SCREEN_HEIGHT * SCREEN_WIDTH
-	call CopyData
+	call CopyBytes
 	ret
 
 Printer_CopyTileMapFromPrinterTileBuffer:
 	hlcoord 0, 0, wPrinterTileBuffer
 	decoord 0, 0
 	ld bc, SCREEN_HEIGHT * SCREEN_WIDTH
-	call CopyData
+	call CopyBytes
 	ret
 
 Printer_ResetJoypadHRAM:

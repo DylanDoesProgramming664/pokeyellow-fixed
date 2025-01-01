@@ -7,7 +7,7 @@ LoadFontTilePatterns::
 	ld de, vFont
 	ld bc, FontGraphicsEnd - FontGraphics
 	ld a, BANK(FontGraphics)
-	jp FarCopyDataDouble ; if LCD is off, transfer all at once
+	jp FarCopyBytesDouble ; if LCD is off, transfer all at once
 .on
 	ld de, FontGraphics
 	ld hl, vFont
@@ -23,7 +23,7 @@ LoadTextBoxTilePatterns::
 	ld de, vChars2 tile $60
 	ld bc, TextBoxGraphicsEnd - TextBoxGraphics
 	ld a, BANK(TextBoxGraphics)
-	jp FarCopyData ; if LCD is off, transfer all at once
+	jp FarCopyBytes ; if LCD is off, transfer all at once
 .on
 	ld de, TextBoxGraphics
 	ld hl, vChars2 tile $60
@@ -39,7 +39,7 @@ LoadHpBarAndStatusTilePatterns::
 	ld de, vChars2 tile $62
 	ld bc, HpBarAndStatusGraphicsEnd - HpBarAndStatusGraphics
 	ld a, BANK(HpBarAndStatusGraphics)
-	jp FarCopyData ; if LCD is off, transfer all at once
+	jp FarCopyBytes ; if LCD is off, transfer all at once
 .on
 	ld de, HpBarAndStatusGraphics
 	ld hl, vChars2 tile $62

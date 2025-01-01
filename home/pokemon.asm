@@ -431,7 +431,7 @@ GetMonHeader::
 	call AddNTimes
 	ld de, wMonHeader
 	ld bc, BASE_DATA_SIZE
-	call CopyData
+	call CopyBytes
 	jr .done
 .specialID
 	ld hl, wMonHSpriteDim
@@ -465,7 +465,7 @@ GetPartyMonName::
 	ld de, wNameBuffer
 	push de
 	ld bc, NAME_LENGTH
-	call CopyData
+	call CopyBytes
 	pop de
 	pop bc
 	pop hl

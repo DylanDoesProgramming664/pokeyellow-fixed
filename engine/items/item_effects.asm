@@ -857,7 +857,7 @@ Func_d85d:
 	ld de, wEvoDataBuffer
 	ld a, BANK(TryEvolvingMon)
 	ld bc, $2
-	call FarCopyData
+	call FarCopyBytes
 	ld hl, wEvoDataBuffer
 	ld a, [hli]
 	ld h, [hl]
@@ -865,7 +865,7 @@ Func_d85d:
 	ld de, wEvoDataBuffer
 	ld a, BANK(TryEvolvingMon)
 	ld bc, 13
-	call FarCopyData
+	call FarCopyBytes
 	ld hl, wEvoDataBuffer
 .loop
 	ld a, [hli]
@@ -2321,10 +2321,7 @@ ItemUsePPRestore:
 
 .fullyRestorePP
 	ld a, [hl] ; move PP
-; Note that this code has a bug. It doesn't mask out the upper two bits, which
-; are used to count how many PP Ups have been used on the move. So, Max Ethers
-; and Max Elixirs will not be detected as having no effect on a move with full
-; PP if the move has had any PP Ups used on it.
+	and %00111111 ; lower 6 bits store current PP
 	cp b ; does current PP equal max PP?
 	ret z
 	jr .storeNewAmount
@@ -2777,7 +2774,7 @@ GetMaxPP:
 	call AddNTimes
 	ld de, wMoveData
 	ld a, BANK(Moves)
-	call FarCopyData
+	call FarCopyBytes
 	ld de, wMoveData + MOVE_PP
 	ld a, [de]
 	ld b, a ; b = normal max PP

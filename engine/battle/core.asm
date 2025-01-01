@@ -1233,7 +1233,7 @@ SlideDownFaintedMonPic:
 	push hl
 	push de
 	ld bc, $7
-	call CopyData
+	call CopyBytes
 	pop de
 	pop hl
 	ld bc, -SCREEN_WIDTH
@@ -1670,18 +1670,18 @@ LoadBattleMonFromParty:
 	call AddNTimes
 	ld de, wBattleMonSpecies
 	ld bc, wBattleMonDVs - wBattleMonSpecies
-	call CopyData
+	call CopyBytes
 	ld bc, wPartyMon1DVs - wPartyMon1OTID
 	add hl, bc
 	ld de, wBattleMonDVs
 	ld bc, wPartyMon1PP - wPartyMon1DVs
-	call CopyData
+	call CopyBytes
 	ld de, wBattleMonPP
 	ld bc, NUM_MOVES
-	call CopyData
+	call CopyBytes
 	ld de, wBattleMonLevel
 	ld bc, wBattleMonPP - wBattleMonLevel
-	call CopyData
+	call CopyBytes
 	ld a, [wBattleMonSpecies2]
 	ld [wCurSpecies], a
 	call GetMonHeader
@@ -1690,11 +1690,11 @@ LoadBattleMonFromParty:
 	call SkipFixedLengthTextEntries
 	ld de, wBattleMonNick
 	ld bc, NAME_LENGTH
-	call CopyData
+	call CopyBytes
 	ld hl, wBattleMonLevel
 	ld de, wPlayerMonUnmodifiedLevel ; block of memory used for unmodified stats
 	ld bc, 1 + NUM_STATS * 2
-	call CopyData
+	call CopyBytes
 	call ApplyBurnAndParalysisPenaltiesToPlayer
 	call ApplyBadgeStatBoosts
 	ld a, $7 ; default stat modifier
@@ -1714,18 +1714,18 @@ LoadEnemyMonFromParty:
 	call AddNTimes
 	ld de, wEnemyMonSpecies
 	ld bc, wEnemyMonDVs - wEnemyMonSpecies
-	call CopyData
+	call CopyBytes
 	ld bc, wEnemyMon1DVs - wEnemyMon1OTID
 	add hl, bc
 	ld de, wEnemyMonDVs
 	ld bc, wEnemyMon1PP - wEnemyMon1DVs
-	call CopyData
+	call CopyBytes
 	ld de, wEnemyMonPP
 	ld bc, NUM_MOVES
-	call CopyData
+	call CopyBytes
 	ld de, wEnemyMonLevel
 	ld bc, wEnemyMonPP - wEnemyMonLevel
-	call CopyData
+	call CopyBytes
 	ld a, [wEnemyMonSpecies]
 	ld [wCurSpecies], a
 	call GetMonHeader
@@ -1734,11 +1734,11 @@ LoadEnemyMonFromParty:
 	call SkipFixedLengthTextEntries
 	ld de, wEnemyMonNick
 	ld bc, NAME_LENGTH
-	call CopyData
+	call CopyBytes
 	ld hl, wEnemyMonLevel
 	ld de, wEnemyMonUnmodifiedLevel ; block of memory used for unmodified stats
 	ld bc, 1 + NUM_STATS * 2
-	call CopyData
+	call CopyBytes
 	call ApplyBurnAndParalysisPenaltiesToEnemy
 	ld hl, wMonHBaseStats
 	ld de, wEnemyMonBaseStats
@@ -1879,7 +1879,7 @@ ReadPlayerMonCurHPAndStatus:
 	ld e, l
 	ld hl, wBattleMonHP
 	ld bc, $4               ; 2 bytes HP, 1 byte unknown (unused?), 1 byte status
-	jp CopyData
+	jp CopyBytes
 
 DrawHUDsAndHPBars:
 	call DrawPlayerHUDAndHPBar
@@ -1901,11 +1901,11 @@ DrawPlayerHUDAndHPBar:
 	ld hl, wBattleMonSpecies
 	ld de, wLoadedMon
 	ld bc, wBattleMonDVs - wBattleMonSpecies
-	call CopyData
+	call CopyBytes
 	ld hl, wBattleMonLevel
 	ld de, wLoadedMonLevel
 	ld bc, wBattleMonPP - wBattleMonLevel
-	call CopyData
+	call CopyBytes
 	hlcoord 14, 8
 	push hl
 	inc hl
@@ -2107,7 +2107,7 @@ DisplayBattleMenu::
 	ld hl, wPlayerName
 	ld de, wLinkEnemyTrainerName
 	ld bc, NAME_LENGTH
-	call CopyData
+	call CopyBytes
 	ld hl, .oldManName
 	ld a, [wBattleType]
 	dec a
@@ -2116,7 +2116,7 @@ DisplayBattleMenu::
 .useOldManName
 	ld de, wPlayerName
 	ld bc, NAME_LENGTH
-	call CopyData
+	call CopyBytes
 ; the following simulates the keystrokes by drawing menus on screen
 	hlcoord 9, 14
 	ld [hl], "▶"
@@ -2573,7 +2573,7 @@ MoveSelectionMenu:
 .loadmoves
 	ld de, wMoves
 	ld bc, NUM_MOVES
-	call CopyData
+	call CopyBytes
 	callfar FormatMovesString
 	ret
 
@@ -4786,7 +4786,6 @@ CriticalHitTest:
 	call GetMonHeader
 	ld a, [wMonHBaseSpeed]
 	ld b, a
-	srl b                        ; (effective (base speed/2))
 	ldh a, [hWhoseTurn]
 	and a
 	ld hl, wPlayerMovePower
@@ -4800,17 +4799,6 @@ CriticalHitTest:
 	ret z                        ; do nothing if zero
 	dec hl
 	ld c, [hl]                   ; read move id
-	ld a, [de]
-	bit GETTING_PUMPED, a        ; test for focus energy
-	jr nz, .focusEnergyUsed      ; bug: using focus energy causes a shift to the right instead of left,
-	                             ; resulting in 1/4 the usual crit chance
-	sla b                        ; (effective (base speed/2)*2)
-	jr nc, .noFocusEnergyUsed
-	ld b, $ff                    ; cap at 255/256
-	jr .noFocusEnergyUsed
-.focusEnergyUsed
-	srl b
-.noFocusEnergyUsed
 	ld hl, HighCriticalMoves     ; table of high critical hit moves
 .Loop
 	ld a, [hli]                  ; read move from move table
@@ -4818,24 +4806,40 @@ CriticalHitTest:
 	jr z, .HighCritical          ; if so, the move about to be used is a high critical hit ratio move
 	inc a                        ; move on to the next move, FF terminates loop
 	jr nz, .Loop                 ; check the next move in HighCriticalMoves
-	srl b                        ; /2 for regular move (effective (base speed / 2))
+	srl b                        ; /2 for regular move
 	jr .SkipHighCritical         ; continue as a normal move
 .HighCritical
 	sla b                        ; *2 for high critical hit moves
 	jr nc, .noCarry
 	ld b, $ff                    ; cap at 255/256
 .noCarry
-	sla b                        ; *4 for high critical move (effective (base speed/2)*8))
+	sla b                        ; *4 for high critical move
 	jr nc, .SkipHighCritical
 	ld b, $ff
 .SkipHighCritical
+    ld a, [de]
+	bit GETTING_PUMPED, a        ; test for focus energy
+	jr z, .noFocusEnergyUsed
+	sla b                        ; (effective (base speed*2))
+	jr nc, .focusEnergyUsed
+	ld b, $ff                    ; cap at 255/256
+	jr .noFocusEnergyUsed
+.focusEnergyUsed
+	sla b                        ; (effective (base speed*2)*2)
+    jr nc .noFocusEnergyUsed
+    ld b, $ff                    ; cap at 255/256
+.noFocusEnergyUsed
+    ld a, b
+    inc a ; optimization of "cp $ff"
+    jr z, .guaranteedCriticalHit
 	call BattleRandom            ; generates a random value, in "a"
 	rlc a
 	rlc a
 	rlc a
 	cp b                         ; check a against calculated crit rate
 	ret nc                       ; no critical hit if no borrow
-	ld a, $1
+.guaranteedCriticalHit	
+    ld a, $1
 	ld [wCriticalHitOrOHKO], a   ; set critical hit flag
 	ret
 
@@ -5298,7 +5302,7 @@ ReloadMoveData:
 	ld bc, MOVE_LENGTH
 	call AddNTimes
 	ld a, BANK(Moves)
-	call FarCopyData ; copy the move's stats
+	call FarCopyBytes ; copy the move's stats
 	call IncrementMovePP
 ; the follow two function calls are used to reload the move name
 	call GetMoveName
@@ -5447,6 +5451,21 @@ AdjustDamageForMoveType:
 	ld b, a
 	ld a, [hl] ; a = damage multiplier
 	ldh [hMultiplier], a
+	and a  ; cp NO_EFFECT
+	jr z, .gotMultiplier
+	cp NOT_VERY_EFFECTIVE
+	jr nz, .nothalf
+	ld a, [wDamageMultipliers]
+	and $7f
+	srl a
+	jr .gotMultiplier
+.nothalf
+	cp SUPER_EFFECTIVE
+	jr nz, .gotMultiplier
+	ld a, [wDamageMultipliers]
+	and $7f
+	sla a
+.gotMultiplier
 	add b
 	ld [wDamageMultipliers], a
 	xor a
@@ -5560,8 +5579,7 @@ MoveHitTest:
 	ret z ; Swift never misses (this was fixed from the Japanese versions)
 	call CheckTargetSubstitute ; substitute check (note that this overwrites a)
 	jr z, .checkForDigOrFlyStatus
-; The fix for Swift broke this code. It's supposed to prevent HP draining moves from working on Substitutes.
-; Since CheckTargetSubstitute overwrites a with either $00 or $01, it never works.
+    ld a, [de]
 	cp DRAIN_HP_EFFECT
 	jp z, .moveMissed
 	cp DREAM_EATER_EFFECT
@@ -5631,7 +5649,11 @@ MoveHitTest:
 .doAccuracyCheck
 ; if the random number generated is greater than or equal to the scaled accuracy, the move misses
 ; note that this means that even the highest accuracy is still just a 255/256 chance, not 100%
-	call BattleRandom
+    ; The following snippet is taken from Pokemon Crystal, it fixes the above bug.
+	ld a, b
+	cp $FF ; Is the value $FF?
+	ret z ; If so, we need not calculate, just so we can fix this bug.
+    call BattleRandom
 	cp b
 	jr nc, .moveMissed
 	ret
@@ -6287,7 +6309,7 @@ GetCurrentMove:
 	ld bc, MOVE_LENGTH
 	call AddNTimes
 	ld a, BANK(Moves)
-	call FarCopyData
+	call FarCopyBytes
 
 	ld a, BANK(MoveNames)
 	ld [wPredefBank], a
@@ -6386,7 +6408,7 @@ LoadEnemyMonData:
 	ld bc, wEnemyMon2 - wEnemyMon1
 	call AddNTimes
 	ld bc, NUM_MOVES
-	call CopyData
+	call CopyBytes
 	jr .loadMovePPs
 .copyStandardMoves
 ; for a wild mon, first copy default moves from the mon header
@@ -6433,7 +6455,7 @@ LoadEnemyMonData:
 	ld hl, wNameBuffer
 	ld de, wEnemyMonNick
 	ld bc, NAME_LENGTH
-	call CopyData
+	call CopyBytes
 	ld a, [wEnemyMonSpecies2]
 	ld [wPokedexNum], a
 	predef IndexToPokedex
@@ -6446,7 +6468,7 @@ LoadEnemyMonData:
 	ld hl, wEnemyMonLevel
 	ld de, wEnemyMonUnmodifiedLevel
 	ld bc, 1 + NUM_STATS * 2
-	call CopyData
+	call CopyBytes
 	ld a, $7 ; default stat mod
 	ld b, NUM_STAT_MODS ; number of stat mods
 	ld hl, wEnemyMonStatMods
@@ -6827,12 +6849,12 @@ LoadHudTilePatterns:
 	ld de, vChars2 tile $6d
 	ld bc, BattleHudTiles1End - BattleHudTiles1
 	ld a, BANK(BattleHudTiles1)
-	call FarCopyDataDouble
+	call FarCopyBytesDouble
 	ld hl, BattleHudTiles2
 	ld de, vChars2 tile $73
 	ld bc, BattleHudTiles3End - BattleHudTiles2
 	ld a, BANK(BattleHudTiles2)
-	jp FarCopyDataDouble
+	jp FarCopyBytesDouble
 .lcdEnabled
 	ld de, BattleHudTiles1
 	ld hl, vChars2 tile $6d

@@ -2057,7 +2057,7 @@ AnimationSubstitute:
 CopyMonsterSpriteData:
 	ld bc, 1 tiles
 	ld a, BANK(MonsterSprite)
-	jp FarCopyData
+	jp FarCopyBytes
 
 HideSubstituteShowMonAnim:
 	ldh a, [hWhoseTurn]

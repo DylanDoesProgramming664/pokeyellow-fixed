@@ -3,22 +3,22 @@ LoadYellowTitleScreenGFX:
 	ld de, vChars2
 	ld bc, PokemonLogoGraphicsEnd - PokemonLogoGraphics
 	ld a, BANK(PokemonLogoGraphics)
-	call FarCopyData
+	call FarCopyBytes
 	ld hl, PokemonLogoCornerGraphics
 	ld de, vChars1 tile $7d
 	ld bc, PokemonLogoCornerGraphicsEnd - PokemonLogoCornerGraphics
 	ld a, BANK(PokemonLogoCornerGraphics)
-	call FarCopyData
+	call FarCopyBytes
 	ld hl, TitlePikachuBGGraphics
 	ld de, vChars1
 	ld bc, TitlePikachuBGGraphicsEnd - TitlePikachuBGGraphics
 	ld a, BANK(TitlePikachuBGGraphics)
-	call FarCopyData
+	call FarCopyBytes
 	ld hl, TitlePikachuOBGraphics
 	ld de, vChars1 tile $70
 	ld bc, TitlePikachuOBGraphicsEnd - TitlePikachuOBGraphics
 	ld a, BANK(TitlePikachuOBGraphics)
-	call FarCopyData
+	call FarCopyBytes
 	ret
 
 TitleScreen_PlacePokemonLogo:

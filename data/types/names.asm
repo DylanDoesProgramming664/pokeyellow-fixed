@@ -12,7 +12,7 @@ TypeNames:
 	dw .Ghost
 
 REPT UNUSED_TYPES_END - UNUSED_TYPES
-	dw .Normal
+	dw .Neutral
 ENDR
 
 	dw .Fire
@@ -22,6 +22,7 @@ ENDR
 	dw .Psychic
 	dw .Ice
 	dw .Dragon
+    dw .Steel
 
 	assert_table_length NUM_TYPES
 
@@ -41,3 +42,5 @@ ENDR
 .Bug:      db "BUG@"
 .Ghost:    db "GHOST@"
 .Dragon:   db "DRAGON@"
+.Steel:    db "STEEL@"
+.Neutral:  db "NEUTRAL@"

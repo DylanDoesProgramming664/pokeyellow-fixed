@@ -449,7 +449,7 @@ SlotMachine_CheckForMatches:
 	ld l, a
 	ld de, wStringBuffer
 	ld bc, 4
-	call CopyData
+	call CopyBytes
 	pop hl
 	ld de, .flashScreenLoop
 	push de
@@ -857,21 +857,21 @@ LoadSlotMachineTiles:
 	ld de, vChars0
 	ld bc, $1c tiles ; should be SlotMachineTiles2End - SlotMachineTiles2, or $18 tiles
 	ld a, BANK(SlotMachineTiles2)
-	call FarCopyData
+	call FarCopyBytes
 	ld hl, SlotMachineTiles1
 	ld de, vChars2
 	ld bc, SlotMachineTiles1End - SlotMachineTiles1
 	ld a, BANK(SlotMachineTiles1)
-	call FarCopyData
+	call FarCopyBytes
 	ld hl, SlotMachineTiles2
 	ld de, vChars2 tile $25
 	ld bc, $1c tiles ; should be SlotMachineTiles2End - SlotMachineTiles2, or $18 tiles
 	ld a, BANK(SlotMachineTiles2)
-	call FarCopyData
+	call FarCopyBytes
 	ld hl, SlotMachineMap
 	decoord 0, 0
 	ld bc, SlotMachineMapEnd - SlotMachineMap
-	call CopyData
+	call CopyBytes
 	call EnableLCD
 	ld hl, wSlotMachineWheel1Offset
 	ld a, $1c
