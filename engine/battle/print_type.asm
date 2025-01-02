@@ -32,16 +32,8 @@ EraseType2Text:
 	jp FillMemory
 
 PrintMoveType:
-	call GetPredefRegisters
+    call GetPredefRegisters
 	push hl
-    ld a, b
-    dec a
-    ld bc, MOVE_LENGTH
-    ld hl, Moves
-    call AddNTimes
-    ld de, wStringBuffer
-    ld a, BANK(Moves)
-    call FarCopyBytes
 	ld a, [wPlayerMoveType]
 ; fall through
 

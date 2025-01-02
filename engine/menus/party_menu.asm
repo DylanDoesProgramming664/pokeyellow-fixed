@@ -132,7 +132,7 @@ RedrawPartyMenu_::
 	ld de, wEvoDataBuffer
 	ld a, BANK(EvosMovesPointerTable)
 	ld bc, 2
-	call FarCopyBytes
+	call FarCopyData
 	ld hl, wEvoDataBuffer
 	ld a, [hli]
 	ld h, [hl]
@@ -140,7 +140,7 @@ RedrawPartyMenu_::
 	ld de, wEvoDataBuffer
 	ld a, BANK(EvosMovesPointerTable)
 	ld bc, 4 * 3 + 1 ; enough for Eevee's three 4-byte evolutions and 0 terminator
-	call FarCopyBytes
+	call FarCopyData
 	ld hl, wEvoDataBuffer
 	ld de, .notAbleToEvolveText
 ; loop through the pokemon's evolution entries

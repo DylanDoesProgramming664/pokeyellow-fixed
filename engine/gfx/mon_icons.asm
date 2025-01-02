@@ -45,7 +45,7 @@ GetAnimationSpeed:
 	ld hl, wMonPartySpritesSavedOAM
 	ld de, wShadowOAM
 	ld bc, $60
-	call CopyBytes
+	call CopyData
 	pop bc
 	xor a
 	jr .incTimer
@@ -151,7 +151,7 @@ LoadMonPartySpriteGfxWithLCDDisabled:
 	inc hl
 	ld d, [hl]
 	pop hl
-	call FarCopyBytes
+	call FarCopyData
 	pop hl
 	pop bc
 	ld a, $6
@@ -189,7 +189,7 @@ WriteMonPartySpriteOAMByPartyIndex:
 	ld hl, wShadowOAM
 	ld de, wMonPartySpritesSavedOAM
 	ld bc, $60
-	call CopyBytes
+	call CopyData
 	pop bc
 	pop de
 	pop hl
@@ -267,7 +267,7 @@ WriteMonPartySpriteOAM:
 	ld hl, wShadowOAM
 	ld de, wMonPartySpritesSavedOAM
 	ld bc, $60
-	jp CopyBytes
+	jp CopyData
 
 GetPartyMonSpriteID:
 	ld [wPokedexNum], a

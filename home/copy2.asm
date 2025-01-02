@@ -3,13 +3,13 @@ IsTilePassable::
 	homecall_sf _IsTilePassable
 	ret
 
-FarCopyBytesDouble::
+FarCopyDataDouble::
 ; Expand bc bytes of 1bpp image data
 ; from a:de to 2bpp data at hl.
-	ld [wFarCopyBytesSavedROMBank], a
+	ld [wFarCopyDataSavedROMBank], a
 	ldh a, [hLoadedROMBank]
 	push af
-	ld a, [wFarCopyBytesSavedROMBank]
+	ld a, [wFarCopyDataSavedROMBank]
 	call BankswitchCommon
 	ld a, h ; swap hl and de
 	ld h, d

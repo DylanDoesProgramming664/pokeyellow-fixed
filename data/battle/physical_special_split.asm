@@ -9,6 +9,8 @@ PhysicalToSpecialMoves:
         db RAZOR_WIND
         db SWIFT
         db TRI_ATTACK
+; Ghost
+        db NIGHT_SHADE
         db -1 ; end
 
 SpecialToPhysicalMoves:
@@ -25,4 +27,6 @@ SpecialToPhysicalMoves:
         db THUNDERPUNCH
 ; Ice
         db ICE_PUNCH
+; Dark
+        db BITE
         db -1 ; end

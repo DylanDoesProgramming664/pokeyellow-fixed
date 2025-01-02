@@ -857,7 +857,7 @@ Func_d85d:
 	ld de, wEvoDataBuffer
 	ld a, BANK(TryEvolvingMon)
 	ld bc, $2
-	call FarCopyBytes
+	call FarCopyData
 	ld hl, wEvoDataBuffer
 	ld a, [hli]
 	ld h, [hl]
@@ -865,7 +865,7 @@ Func_d85d:
 	ld de, wEvoDataBuffer
 	ld a, BANK(TryEvolvingMon)
 	ld bc, 13
-	call FarCopyBytes
+	call FarCopyData
 	ld hl, wEvoDataBuffer
 .loop
 	ld a, [hli]
@@ -2774,7 +2774,7 @@ GetMaxPP:
 	call AddNTimes
 	ld de, wMoveData
 	ld a, BANK(Moves)
-	call FarCopyBytes
+	call FarCopyData
 	ld de, wMoveData + MOVE_PP
 	ld a, [de]
 	ld b, a ; b = normal max PP

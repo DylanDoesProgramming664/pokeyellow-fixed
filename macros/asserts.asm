@@ -29,7 +29,7 @@ ENDM
 MACRO assert_table_length
 	DEF x = \1
 	ASSERT x * CURRENT_TABLE_WIDTH == @ - {CURRENT_TABLE_START}, \
-		"{CURRENT_TABLE_START}: expected {d:x} entries, each {d:CURRENT_TABLE_WIDTH} bytes"
+		"{CURRENT_TABLE_START}: expected {d:x} entries, each {d:CURRENT_TABLE_WIDTH} bytes."
 ENDM
 
 MACRO assert_max_table_length

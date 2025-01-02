@@ -322,7 +322,7 @@ StatusScreen2:
 	ld hl, wLoadedMonMoves
 	ld de, wMoves
 	ld bc, NUM_MOVES
-	call CopyBytes
+	call CopyData
 	callfar FormatMovesString
 	hlcoord 9, 2
 	lb bc, 5, 10

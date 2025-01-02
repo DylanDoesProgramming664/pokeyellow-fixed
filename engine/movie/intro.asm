@@ -107,12 +107,12 @@ PlayShootingStar:
 	ld de, vChars2 + $600
 	ld bc, GameFreakIntroEnd - GameFreakIntro
 	ld a, BANK(GameFreakIntro)
-	call FarCopyBytes
+	call FarCopyData
 	ld hl, GameFreakIntro
 	ld de, vChars1
 	ld bc, GameFreakIntroEnd - GameFreakIntro
 	ld a, BANK(GameFreakIntro)
-	call FarCopyBytes
+	call FarCopyData
 
 	call EnableLCD
 	ld hl, rLCDC

@@ -84,7 +84,7 @@ GetName::
 	ld l, e
 	ld de, wNameBuffer
 	ld bc, NAME_BUFFER_LENGTH
-	call CopyBytes
+	call CopyData
 .gotPtr
 	ld a, e
 	ld [wUnusedNamePointer], a

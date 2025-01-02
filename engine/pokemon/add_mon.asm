@@ -269,7 +269,7 @@ AddPartyMon_WriteMovePP:
 	call AddNTimes
 	ld de, wMoveData
 	ld a, BANK(Moves)
-	call FarCopyBytes
+	call FarCopyData
 	pop bc
 	pop de
 	pop hl

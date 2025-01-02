@@ -506,25 +506,25 @@ DrawTrainerInfo:
 	ld hl, vChars2 tile $07
 	ld de, vChars2 tile $00
 	ld bc, $1c tiles
-	call CopyBytes
+	call CopyData
 	ld hl, TrainerInfoTextBoxTileGraphics ; trainer info text box tile patterns
 	ld de, vChars2 tile $77
 	ld bc, 8 tiles
 	push bc
-	call TrainerInfo_FarCopyBytes
+	call TrainerInfo_FarCopyData
 	ld hl, BlankLeaderNames
 	ld de, vChars2 tile $60
 	ld bc, $17 tiles
-	call TrainerInfo_FarCopyBytes
+	call TrainerInfo_FarCopyData
 	pop bc
 	ld hl, BadgeNumbersTileGraphics  ; badge number tile patterns
 	ld de, vChars1 tile $58
-	call TrainerInfo_FarCopyBytes
+	call TrainerInfo_FarCopyData
 	ld hl, GymLeaderFaceAndBadgeTileGraphics  ; gym leader face and badge tile patterns
 	ld de, vChars2 tile $20
 	ld bc, 8 * 8 tiles
 	ld a, BANK(GymLeaderFaceAndBadgeTileGraphics)
-	call FarCopyBytes
+	call FarCopyData
 	ld hl, TextBoxGraphics
 	ld de, 13 tiles
 	add hl, de ; hl = colon tile pattern
@@ -532,11 +532,11 @@ DrawTrainerInfo:
 	ld bc, 1 tiles
 	ld a, BANK(TextBoxGraphics)
 	push bc
-	call FarCopyBytes
+	call FarCopyData
 	pop bc
 	ld hl, TrainerInfoTextBoxTileGraphics tile 8  ; background tile pattern
 	ld de, vChars1 tile $57
-	call TrainerInfo_FarCopyBytes
+	call TrainerInfo_FarCopyData
 	call EnableLCD
 	ld hl, wTrainerInfoTextBoxWidthPlus1
 	ld a, 18 + 1
@@ -582,9 +582,9 @@ DrawTrainerInfo:
 	lb bc, LEADING_ZEROES | 1, 2
 	jp PrintNumber
 
-TrainerInfo_FarCopyBytes:
+TrainerInfo_FarCopyData:
 	ld a, BANK(TrainerInfoTextBoxTileGraphics)
-	jp FarCopyBytes
+	jp FarCopyData
 
 TrainerInfo_NameMoneyTimeText:
 	db   "NAME/"
@@ -767,7 +767,7 @@ SwitchPartyMon_InitVarOrSwapData:
 	push hl
 	ld de, wSwitchPartyMonTempBuffer
 	ld bc, wPartyMon2 - wPartyMon1
-	call CopyBytes
+	call CopyData
 	ld hl, wPartyMons
 	ld bc, wPartyMon2 - wPartyMon1
 	ld a, [wMenuItemToSwap]
@@ -775,47 +775,47 @@ SwitchPartyMon_InitVarOrSwapData:
 	pop de
 	push hl
 	ld bc, wPartyMon2 - wPartyMon1
-	call CopyBytes
+	call CopyData
 	pop de
 	ld hl, wSwitchPartyMonTempBuffer
 	ld bc, wPartyMon2 - wPartyMon1
-	call CopyBytes
+	call CopyData
 	ld hl, wPartyMonOT
 	ld a, [wCurrentMenuItem]
 	call SkipFixedLengthTextEntries
 	push hl
 	ld de, wSwitchPartyMonTempBuffer
 	ld bc, NAME_LENGTH
-	call CopyBytes
+	call CopyData
 	ld hl, wPartyMonOT
 	ld a, [wMenuItemToSwap]
 	call SkipFixedLengthTextEntries
 	pop de
 	push hl
 	ld bc, NAME_LENGTH
-	call CopyBytes
+	call CopyData
 	pop de
 	ld hl, wSwitchPartyMonTempBuffer
 	ld bc, NAME_LENGTH
-	call CopyBytes
+	call CopyData
 	ld hl, wPartyMonNicks
 	ld a, [wCurrentMenuItem]
 	call SkipFixedLengthTextEntries
 	push hl
 	ld de, wSwitchPartyMonTempBuffer
 	ld bc, NAME_LENGTH
-	call CopyBytes
+	call CopyData
 	ld hl, wPartyMonNicks
 	ld a, [wMenuItemToSwap]
 	call SkipFixedLengthTextEntries
 	pop de
 	push hl
 	ld bc, NAME_LENGTH
-	call CopyBytes
+	call CopyData
 	pop de
 	ld hl, wSwitchPartyMonTempBuffer
 	ld bc, NAME_LENGTH
-	call CopyBytes
+	call CopyData
 	ld a, [wMenuItemToSwap]
 	ld [wSwappedMenuItem], a
 	xor a

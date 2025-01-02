@@ -1054,7 +1054,7 @@ Func_feeef:
 	ld de, wMoves
 	ld bc, NUM_MOVES
 	ld a, BANK(BaseStats)
-	call FarCopyBytes
+	call FarCopyData
 	callfar PokedexToIndex
 	ld a, [wPokedexNum]
 	ld [wCurPartySpecies], a

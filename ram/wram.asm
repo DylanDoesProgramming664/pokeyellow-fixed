@@ -1766,7 +1766,7 @@ wEvolutionOccurred:: db
 
 wVBlankSavedROMBank:: db
 
-wFarCopyBytesSavedROMBank:: db
+wFarCopyDataSavedROMBank:: db
 
 wIsKeyItem:: db
 

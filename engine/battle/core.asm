@@ -1233,7 +1233,7 @@ SlideDownFaintedMonPic:
 	push hl
 	push de
 	ld bc, $7
-	call CopyBytes
+	call CopyData
 	pop de
 	pop hl
 	ld bc, -SCREEN_WIDTH
@@ -1670,18 +1670,18 @@ LoadBattleMonFromParty:
 	call AddNTimes
 	ld de, wBattleMonSpecies
 	ld bc, wBattleMonDVs - wBattleMonSpecies
-	call CopyBytes
+	call CopyData
 	ld bc, wPartyMon1DVs - wPartyMon1OTID
 	add hl, bc
 	ld de, wBattleMonDVs
 	ld bc, wPartyMon1PP - wPartyMon1DVs
-	call CopyBytes
+	call CopyData
 	ld de, wBattleMonPP
 	ld bc, NUM_MOVES
-	call CopyBytes
+	call CopyData
 	ld de, wBattleMonLevel
 	ld bc, wBattleMonPP - wBattleMonLevel
-	call CopyBytes
+	call CopyData
 	ld a, [wBattleMonSpecies2]
 	ld [wCurSpecies], a
 	call GetMonHeader
@@ -1690,11 +1690,11 @@ LoadBattleMonFromParty:
 	call SkipFixedLengthTextEntries
 	ld de, wBattleMonNick
 	ld bc, NAME_LENGTH
-	call CopyBytes
+	call CopyData
 	ld hl, wBattleMonLevel
 	ld de, wPlayerMonUnmodifiedLevel ; block of memory used for unmodified stats
 	ld bc, 1 + NUM_STATS * 2
-	call CopyBytes
+	call CopyData
 	call ApplyBurnAndParalysisPenaltiesToPlayer
 	call ApplyBadgeStatBoosts
 	ld a, $7 ; default stat modifier
@@ -1714,18 +1714,18 @@ LoadEnemyMonFromParty:
 	call AddNTimes
 	ld de, wEnemyMonSpecies
 	ld bc, wEnemyMonDVs - wEnemyMonSpecies
-	call CopyBytes
+	call CopyData
 	ld bc, wEnemyMon1DVs - wEnemyMon1OTID
 	add hl, bc
 	ld de, wEnemyMonDVs
 	ld bc, wEnemyMon1PP - wEnemyMon1DVs
-	call CopyBytes
+	call CopyData
 	ld de, wEnemyMonPP
 	ld bc, NUM_MOVES
-	call CopyBytes
+	call CopyData
 	ld de, wEnemyMonLevel
 	ld bc, wEnemyMonPP - wEnemyMonLevel
-	call CopyBytes
+	call CopyData
 	ld a, [wEnemyMonSpecies]
 	ld [wCurSpecies], a
 	call GetMonHeader
@@ -1734,11 +1734,11 @@ LoadEnemyMonFromParty:
 	call SkipFixedLengthTextEntries
 	ld de, wEnemyMonNick
 	ld bc, NAME_LENGTH
-	call CopyBytes
+	call CopyData
 	ld hl, wEnemyMonLevel
 	ld de, wEnemyMonUnmodifiedLevel ; block of memory used for unmodified stats
 	ld bc, 1 + NUM_STATS * 2
-	call CopyBytes
+	call CopyData
 	call ApplyBurnAndParalysisPenaltiesToEnemy
 	ld hl, wMonHBaseStats
 	ld de, wEnemyMonBaseStats
@@ -1879,7 +1879,7 @@ ReadPlayerMonCurHPAndStatus:
 	ld e, l
 	ld hl, wBattleMonHP
 	ld bc, $4               ; 2 bytes HP, 1 byte unknown (unused?), 1 byte status
-	jp CopyBytes
+	jp CopyData
 
 DrawHUDsAndHPBars:
 	call DrawPlayerHUDAndHPBar
@@ -1901,11 +1901,11 @@ DrawPlayerHUDAndHPBar:
 	ld hl, wBattleMonSpecies
 	ld de, wLoadedMon
 	ld bc, wBattleMonDVs - wBattleMonSpecies
-	call CopyBytes
+	call CopyData
 	ld hl, wBattleMonLevel
 	ld de, wLoadedMonLevel
 	ld bc, wBattleMonPP - wBattleMonLevel
-	call CopyBytes
+	call CopyData
 	hlcoord 14, 8
 	push hl
 	inc hl
@@ -2107,7 +2107,7 @@ DisplayBattleMenu::
 	ld hl, wPlayerName
 	ld de, wLinkEnemyTrainerName
 	ld bc, NAME_LENGTH
-	call CopyBytes
+	call CopyData
 	ld hl, .oldManName
 	ld a, [wBattleType]
 	dec a
@@ -2116,7 +2116,7 @@ DisplayBattleMenu::
 .useOldManName
 	ld de, wPlayerName
 	ld bc, NAME_LENGTH
-	call CopyBytes
+	call CopyData
 ; the following simulates the keystrokes by drawing menus on screen
 	hlcoord 9, 14
 	ld [hl], "▶"
@@ -2573,7 +2573,7 @@ MoveSelectionMenu:
 .loadmoves
 	ld de, wMoves
 	ld bc, NUM_MOVES
-	call CopyBytes
+	call CopyData
 	callfar FormatMovesString
 	ret
 
@@ -3052,7 +3052,7 @@ PrintMenuItem:
 	and $3f
 	ld [wBattleMenuCurrentPP], a
 ; print TYPE/<type> and <curPP>/<maxPP>
-	hlcoord 1, 9
+    hlcoord 1, 9
 	ld de, TypeText
 	call PlaceString
 	hlcoord 7, 11
@@ -3069,7 +3069,7 @@ PrintMenuItem:
 	call PrintNumber
 	call GetCurrentMove
 	hlcoord 2, 10
-	predef PrintMoveType
+	predef PrintMoveType   
 .moveDisabled
 	ld a, $1
 	ldh [hAutoBGTransferEnabled], a
@@ -3079,7 +3079,7 @@ DisabledText:
 	db "Disabled!@"
 
 TypeText:
-	db "TYPE@"
+    db "TYPE@"
 
 SelectEnemyMove:
 	ld a, [wLinkState]
@@ -4336,8 +4336,29 @@ GetDamageVarsForPlayerAttack:
 	ld d, a ; d = move power
 	ret z ; return if move power is zero
 	ld a, [hl] ; a = [wPlayerMoveType]
-	cp SPECIAL ; types >= SPECIAL are all special
-	jr nc, .specialAttack
+    cp SPECIAL ; types >= SPECIAL are all special
+    ld a, [wPlayerMoveNum]
+    ld b, a
+    jr nc, .isSpecialActuallyPhysical
+    jr .isPhysicalActuallySpecial
+.isSpecialActuallyPhysical
+    ld hl, SpecialToPhysicalMoves
+.specialPhysicalLoop
+    ld a, [hli]
+    cp b
+    jr z, .physicalAttack
+    cp $ff ; end of list
+    jr nz, .specialPhysicalLoop ; keep checking list
+    jr .specialAttack ; Not actually a physical move
+.isPhysicalActuallySpecial
+    ld hl, PhysicalToSpecialMoves
+.physicalSpecialLoop
+    ld a, [hli]
+    cp b
+    jr z, .specialAttack ; the physical move is actually special
+    cp $ff ; end of list
+    jr nz, .physicalSpecialLoop ; keep checking list
+    ; fallthrough
 .physicalAttack
 	ld hl, wEnemyMonDefense
 	ld a, [hli]
@@ -4450,7 +4471,28 @@ GetDamageVarsForEnemyAttack:
 	ret z ; return if move power is zero
 	ld a, [hl] ; a = [wEnemyMoveType]
 	cp SPECIAL ; types >= SPECIAL are all special
-	jr nc, .specialAttack
+    ld a, [wEnemyMoveNum]
+    ld b, a
+    jr nc, .isSpecialActuallyPhysical
+    jr .isPhysicalActuallySpecial
+.isSpecialActuallyPhysical
+    ld hl, SpecialToPhysicalMoves
+.specialPhysicalLoop
+    ld a, [hli]
+    cp b
+    jr z, .physicalAttack
+    cp $ff ; end of list
+    jr nz, .specialPhysicalLoop ; keep checking list
+    jr .specialAttack ; Not actually a physical move
+.isPhysicalActuallySpecial
+    ld hl, PhysicalToSpecialMoves
+.physicalSpecialLoop
+    ld a, [hli]
+    cp b
+    jr z, .specialAttack ; the physical move is actually special
+    cp $ff ; end of list
+    jr nz, .physicalSpecialLoop ; keep checking list
+    ; fallthrough
 .physicalAttack
 	ld hl, wBattleMonDefense
 	ld a, [hli]
@@ -4550,6 +4592,8 @@ GetDamageVarsForEnemyAttack:
 	and a
 	and a
 	ret
+
+INCLUDE "data/battle/physical_special_split.asm"
 
 ; get stat c of enemy mon
 ; c: stat to get (STAT_* constant)
@@ -4826,7 +4870,7 @@ CriticalHitTest:
 	jr .noFocusEnergyUsed
 .focusEnergyUsed
 	sla b                        ; (effective (base speed*2)*2)
-    jr nc .noFocusEnergyUsed
+    jr nc, .noFocusEnergyUsed
     ld b, $ff                    ; cap at 255/256
 .noFocusEnergyUsed
     ld a, b
@@ -5297,12 +5341,13 @@ MirrorMoveFailedText:
 ; function used to reload move data for moves like Mirror Move and Metronome
 ReloadMoveData:
 	ld [wNamedObjectIndex], a
-	dec a
+	
+    dec a
 	ld hl, Moves
 	ld bc, MOVE_LENGTH
 	call AddNTimes
 	ld a, BANK(Moves)
-	call FarCopyBytes ; copy the move's stats
+	call FarCopyData ; copy the move's stats
 	call IncrementMovePP
 ; the follow two function calls are used to reload the move name
 	call GetMoveName
@@ -5643,6 +5688,8 @@ MoveHitTest:
 	ld b, a
 	ldh a, [hWhoseTurn]
 	and a
+    cp $00
+    ret z
 	jr z, .doAccuracyCheck
 	ld a, [wEnemyMoveAccuracy]
 	ld b, a
@@ -5651,8 +5698,8 @@ MoveHitTest:
 ; note that this means that even the highest accuracy is still just a 255/256 chance, not 100%
     ; The following snippet is taken from Pokemon Crystal, it fixes the above bug.
 	ld a, b
-	cp $FF ; Is the value $FF?
-	ret z ; If so, we need not calculate, just so we can fix this bug.
+    cp $FF ; Is the value $FF?
+	ret z ; If so, we need not calculate, just so we can fix this bug. 
     call BattleRandom
 	cp b
 	jr nc, .moveMissed
@@ -6309,7 +6356,7 @@ GetCurrentMove:
 	ld bc, MOVE_LENGTH
 	call AddNTimes
 	ld a, BANK(Moves)
-	call FarCopyBytes
+	call FarCopyData
 
 	ld a, BANK(MoveNames)
 	ld [wPredefBank], a
@@ -6408,7 +6455,7 @@ LoadEnemyMonData:
 	ld bc, wEnemyMon2 - wEnemyMon1
 	call AddNTimes
 	ld bc, NUM_MOVES
-	call CopyBytes
+	call CopyData
 	jr .loadMovePPs
 .copyStandardMoves
 ; for a wild mon, first copy default moves from the mon header
@@ -6455,7 +6502,7 @@ LoadEnemyMonData:
 	ld hl, wNameBuffer
 	ld de, wEnemyMonNick
 	ld bc, NAME_LENGTH
-	call CopyBytes
+	call CopyData
 	ld a, [wEnemyMonSpecies2]
 	ld [wPokedexNum], a
 	predef IndexToPokedex
@@ -6468,7 +6515,7 @@ LoadEnemyMonData:
 	ld hl, wEnemyMonLevel
 	ld de, wEnemyMonUnmodifiedLevel
 	ld bc, 1 + NUM_STATS * 2
-	call CopyBytes
+	call CopyData
 	ld a, $7 ; default stat mod
 	ld b, NUM_STAT_MODS ; number of stat mods
 	ld hl, wEnemyMonStatMods
@@ -6849,12 +6896,12 @@ LoadHudTilePatterns:
 	ld de, vChars2 tile $6d
 	ld bc, BattleHudTiles1End - BattleHudTiles1
 	ld a, BANK(BattleHudTiles1)
-	call FarCopyBytesDouble
+	call FarCopyDataDouble
 	ld hl, BattleHudTiles2
 	ld de, vChars2 tile $73
 	ld bc, BattleHudTiles3End - BattleHudTiles2
 	ld a, BANK(BattleHudTiles2)
-	jp FarCopyBytesDouble
+	jp FarCopyDataDouble
 .lcdEnabled
 	ld de, BattleHudTiles1
 	ld hl, vChars2 tile $6d

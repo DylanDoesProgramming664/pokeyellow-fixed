@@ -29,12 +29,12 @@ DEF NUM_STAT_MODS EQU const_value
 
 ; Moves struct fields (see data/moves/moves.asm)
 rsreset
-DEF MOVE_ANIM   rb
-DEF MOVE_EFFECT rb
-DEF MOVE_POWER  rb
-DEF MOVE_TYPE   rb
-DEF MOVE_ACC    rb
-DEF MOVE_PP     rb
+DEF MOVE_ANIM   rb ; 0
+DEF MOVE_EFFECT rb ; 1
+DEF MOVE_POWER  rb ; 2
+DEF MOVE_TYPE   rb ; 3
+DEF MOVE_ACC    rb ; 4
+DEF MOVE_PP     rb ; 5
 DEF MOVE_LENGTH EQU _RS
 
 ; battle type constants (wBattleType values)
