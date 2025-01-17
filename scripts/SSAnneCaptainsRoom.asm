@@ -46,7 +46,7 @@ SSAnneCaptainsRoomRubCaptainsBackText:
 	text_far _SSAnneCaptainsRoomRubCaptainsBackText
 	text_asm
 	ld a, [wAudioROMBank]
-	cp BANK("Audio Engine 3")
+	cp BANK("Audio Engine 1")
 	ld [wAudioSavedROMBank], a
 	jr nz, .not_audio_engine_3
 	call StopAllMusic
